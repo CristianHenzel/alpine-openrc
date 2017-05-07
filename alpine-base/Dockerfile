@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-RUN /sbin/apk add --no-cache dcron openrc
+RUN /sbin/apk add --no-cache dcron openrc rsync
 
 RUN /bin/sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf &&\
     /bin/sed -i 's/^#\(rc_logger="YES"\)$/\1/' /etc/rc.conf &&\
