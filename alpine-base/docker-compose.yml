@@ -1,0 +1,24 @@
+version: '3.1'
+services:
+  rsync-manager:
+    image: hecristi/alpine-base
+    environment:
+      RSYNC_SERVER: 'true'
+    volumes:
+      - /data:/rsync/data
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+  rsync-worker:
+    image: hecristi/alpine-base
+    environment:
+      RSYNC_SERVER: 'rsync-manager'
+      RSYNC_FOLDERS: 'example'
+      RSYNC_STIME: 3
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == worker
