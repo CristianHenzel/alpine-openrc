@@ -1,0 +1,51 @@
+#!/sbin/openrc-run
+
+RSYNC_SERVER=$(xargs -n 1 -0 < /proc/1/environ | grep "^RSYNC_SERVER=" | cut -d= -f2)
+
+_setup() {
+	ebegin "Setting up environment for rsync"
+	getent group nogroup > /dev/null || addgroup nogroup
+	getent passwd nouser > /dev/null || adduser -D -H -G nogroup nouser
+	[ -d "/rsync/data" ] || mkdir -p "/rsync/data"
+	[ -d "/rsync/meta" ] || mkdir -p "/rsync/meta"
+	chown -R nouser:nogroup "/rsync"
+}
+
+depend() {
+	use net
+	after firewall
+}
+
+start_pre() {
+	_setup
+	ebegin "Starting rsync-manager"
+	start-stop-daemon --start --exec /var/alpine-base/rsync-manager.sh \
+		--pidfile /var/run/rsync-manager.pid -- start
+	return $?
+}
+
+start() {
+	ebegin "Starting rsyncd ($RSYNC_SERVER)"
+	if [ "$RSYNC_SERVER" = "true" ]; then
+		start-stop-daemon --start --exec /usr/bin/rsync \
+			--pidfile /var/run/rsyncd.pid \
+			-- --daemon ${RSYNC_OPTS}
+	fi
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping rsyncd"
+	if [ "$RSYNC_SERVER" = "true" ]; then
+		start-stop-daemon --stop --exec /usr/bin/rsync \
+			--pidfile /var/run/rsyncd.pid
+	fi
+	eend $?
+}
+
+stop_pre() {
+	ebegin "Stopping rsync-manager"
+	start-stop-daemon --stop --exec /var/alpine-base/rsync-manager.sh \
+		--pidfile /var/run/rsync-manager.pid
+	return $?
+}
