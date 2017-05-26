@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-RUN /sbin/apk add --no-cache dcron inotify-tools nano openrc rsync tar
+RUN /sbin/apk add --no-cache curl dcron inotify-tools nano openrc rsync tar
 
 COPY ./alpine-base /var/alpine-base
 
