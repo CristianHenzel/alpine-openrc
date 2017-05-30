@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.6
 
 RUN /sbin/apk add --no-cache curl dcron inotify-tools nano openrc rsync tar
 
