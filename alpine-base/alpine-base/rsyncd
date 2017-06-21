@@ -22,7 +22,7 @@ _setup() {
 _sync() {
 	# Running in client mode
 	while true; do
-		for dir in ${RSYNC_FOLDERS//,/}; do
+		for dir in ${RSYNC_FOLDERS//,/ }; do
 			rsync -aEzim --delete --timeout 10 rsync://rsync-manager/rsync/data/$dir /rsync/data/
 		done
 		sleep ${RSYNC_STIME}
