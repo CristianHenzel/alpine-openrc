@@ -1,5 +1,9 @@
 #!/sbin/openrc-run
 
+_pid1env() {
+	xargs -n 1 -0 < /proc/1/environ | grep "^$2=" | cut -d= -f2
+}
+
 RSYNC_SERVER=$(xargs -n 1 -0 < /proc/1/environ | grep "^RSYNC_SERVER=" | cut -d= -f2)
 
 _setup() {
