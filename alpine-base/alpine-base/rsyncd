@@ -4,7 +4,9 @@ _pid1env() {
 	xargs -n 1 -0 < /proc/1/environ | grep "^$2=" | cut -d= -f2
 }
 
-RSYNC_SERVER=$(xargs -n 1 -0 < /proc/1/environ | grep "^RSYNC_SERVER=" | cut -d= -f2)
+RSYNC_SERVER=$(_pid1env RSYNC_SERVER)
+RSYNC_FOLDERS=$(_pid1env RSYNC_FOLDERS)
+RSYNC_STIME=$(_pid1env RSYNC_STIME)
 
 _setup() {
 	ebegin "Setting up environment for rsync"
