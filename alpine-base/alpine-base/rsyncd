@@ -1,5 +1,8 @@
 #!/sbin/openrc-run
 
+RSYNCC_PID=/var/run/rsyncc.pid
+RSYNCD_PID=/var/run/rsyncd.pid
+
 _pid1env() {
 	xargs -n 1 -0 < /proc/1/environ | grep "^$2=" | cut -d= -f2
 }
@@ -13,8 +16,21 @@ _setup() {
 	getent group nogroup > /dev/null || addgroup nogroup
 	getent passwd nouser > /dev/null || adduser -D -H -G nogroup nouser
 	[ -d "/rsync/data" ] || mkdir -p "/rsync/data"
-	[ -d "/rsync/meta" ] || mkdir -p "/rsync/meta"
 	chown -R nouser:nogroup "/rsync"
+}
+
+_sync() {
+	if [ "$RSYNC_SERVER" != "true" ]; then
+		# Running in client mode
+		while true; do
+			for dir in ${RSYNC_FOLDERS//,/}; do
+				if [ -n "${RSYNC_OUTPUT}" ]; then
+					rsync -aEim rsync://rsync-manager/rsync/data/$dir /rsync/data/
+				fi
+				sleep ${RSYNC_STIME}
+			done
+		done
+	fi
 }
 
 depend() {
@@ -24,9 +40,9 @@ depend() {
 
 start_pre() {
 	_setup
-	ebegin "Starting rsync-manager"
-	start-stop-daemon --start --exec /var/alpine-base/rsync-manager.sh \
-		--pidfile /var/run/rsync-manager.pid -- start
+	ebegin "Starting rsync-client"
+	_sync &
+	echo $! > $RSYNCC_PID
 	return $?
 }
 
@@ -34,24 +50,23 @@ start() {
 	ebegin "Starting rsyncd ($RSYNC_SERVER)"
 	if [ "$RSYNC_SERVER" = "true" ]; then
 		start-stop-daemon --start --exec /usr/bin/rsync \
-			--pidfile /var/run/rsyncd.pid \
+			--pidfile $RSYNCD_PID \
 			-- --daemon ${RSYNC_OPTS}
 	fi
 	eend $?
+}
+
+stop_pre() {
+	ebegin "Stopping rsync-client"
+	kill $RSYNCC_PID
+	return $?
 }
 
 stop() {
 	ebegin "Stopping rsyncd"
 	if [ "$RSYNC_SERVER" = "true" ]; then
 		start-stop-daemon --stop --exec /usr/bin/rsync \
-			--pidfile /var/run/rsyncd.pid
+			--pidfile $RSYNCD_PID
 	fi
 	eend $?
-}
-
-stop_pre() {
-	ebegin "Stopping rsync-manager"
-	start-stop-daemon --stop --exec /var/alpine-base/rsync-manager.sh \
-		--pidfile /var/run/rsync-manager.pid
-	return $?
 }
