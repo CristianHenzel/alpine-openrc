@@ -61,7 +61,7 @@ start() {
 stop_pre() {
 	ebegin "Stopping rsync-client"
 	if [ -f "$RSYNCC_PID" -a -f /proc/$(cat "$RSYNCC_PID" 2>/dev/null)/stat ]; then
-		kill $RSYNCC_PID
+		kill $(cat "$RSYNCC_PID")
 	fi
 	return $?
 }
