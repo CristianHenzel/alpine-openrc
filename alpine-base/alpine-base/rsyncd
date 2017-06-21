@@ -1,14 +1,32 @@
 #!/sbin/openrc-run
 
-RSYNC_SERVER=$(xargs -n 1 -0 < /proc/1/environ | grep "^RSYNC_SERVER=" | cut -d= -f2)
+RSYNCC_PID=/var/run/rsyncc.pid
+RSYNCD_PID=/var/run/rsyncd.pid
+
+_pid1env() {
+	xargs -n 1 -0 < /proc/1/environ | grep "^$1=" | cut -d= -f2
+}
+
+RSYNC_SERVER=$(_pid1env RSYNC_SERVER)
+RSYNC_FOLDERS=$(_pid1env RSYNC_FOLDERS)
+RSYNC_STIME=$(_pid1env RSYNC_STIME)
 
 _setup() {
 	ebegin "Setting up environment for rsync"
 	getent group nogroup > /dev/null || addgroup nogroup
 	getent passwd nouser > /dev/null || adduser -D -H -G nogroup nouser
 	[ -d "/rsync/data" ] || mkdir -p "/rsync/data"
-	[ -d "/rsync/meta" ] || mkdir -p "/rsync/meta"
 	chown -R nouser:nogroup "/rsync"
+}
+
+_sync() {
+	# Running in client mode
+	while true; do
+		for dir in ${RSYNC_FOLDERS//,/}; do
+			rsync -aEzim --delete --timeout 10 rsync://rsync-manager/rsync/data/$dir /rsync/data/
+		done
+		sleep ${RSYNC_STIME}
+	done
 }
 
 depend() {
@@ -18,9 +36,11 @@ depend() {
 
 start_pre() {
 	_setup
-	ebegin "Starting rsync-manager"
-	start-stop-daemon --start --exec /var/alpine-base/rsync-manager.sh \
-		--pidfile /var/run/rsync-manager.pid -- start
+	if [ "$RSYNC_SERVER" != "true" ]; then
+		ebegin "Starting rsync-client"
+		_sync &
+		echo $! > $RSYNCC_PID
+	fi
 	return $?
 }
 
@@ -28,24 +48,25 @@ start() {
 	ebegin "Starting rsyncd ($RSYNC_SERVER)"
 	if [ "$RSYNC_SERVER" = "true" ]; then
 		start-stop-daemon --start --exec /usr/bin/rsync \
-			--pidfile /var/run/rsyncd.pid \
+			--pidfile $RSYNCD_PID \
 			-- --daemon ${RSYNC_OPTS}
 	fi
 	eend $?
+}
+
+stop_pre() {
+	ebegin "Stopping rsync-client"
+	if [ -f "$RSYNCC_PID" -a -f /proc/$(cat "$RSYNCC_PID")/stat ]; then
+		kill $RSYNCC_PID
+	fi
+	return $?
 }
 
 stop() {
 	ebegin "Stopping rsyncd"
 	if [ "$RSYNC_SERVER" = "true" ]; then
 		start-stop-daemon --stop --exec /usr/bin/rsync \
-			--pidfile /var/run/rsyncd.pid
+			--pidfile $RSYNCD_PID
 	fi
 	eend $?
-}
-
-stop_pre() {
-	ebegin "Stopping rsync-manager"
-	start-stop-daemon --stop --exec /var/alpine-base/rsync-manager.sh \
-		--pidfile /var/run/rsync-manager.pid
-	return $?
 }
