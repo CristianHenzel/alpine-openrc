@@ -23,7 +23,7 @@ _sync() {
 	# Running in client mode
 	while true; do
 		for dir in ${RSYNC_FOLDERS//,/}; do
-			rsync -aEim rsync://rsync-manager/rsync/data/$dir /rsync/data/
+			rsync -aPEzim --delete --timeout 10 rsync://rsync-manager/rsync/data/$dir /rsync/data/
 		done
 		sleep ${RSYNC_STIME}
 	done
@@ -56,7 +56,9 @@ start() {
 
 stop_pre() {
 	ebegin "Stopping rsync-client"
-	kill $RSYNCC_PID
+	if [ -f "$RSYNCC_PID" -a -f /proc/$(cat "$RSYNCC_PID")/stat ]; then
+		kill $RSYNCC_PID
+	fi
 	return $?
 }
 
