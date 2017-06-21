@@ -35,6 +35,9 @@ depend() {
 }
 
 start_pre() {
+	if [ -z "$RSYNC_SERVER" ]; then
+		exit 0
+	fi
 	_setup
 	if [ "$RSYNC_SERVER" != "true" ]; then
 		ebegin "Starting rsync-client"
@@ -56,7 +59,7 @@ start() {
 
 stop_pre() {
 	ebegin "Stopping rsync-client"
-	if [ -f "$RSYNCC_PID" -a -f /proc/$(cat "$RSYNCC_PID")/stat ]; then
+	if [ -f "$RSYNCC_PID" -a -f /proc/$(cat "$RSYNCC_PID" 2>/dev/null)/stat ]; then
 		kill $RSYNCC_PID
 	fi
 	return $?
