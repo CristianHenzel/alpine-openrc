@@ -10,6 +10,7 @@ _pid1env() {
 RSYNC_SERVER=$(_pid1env RSYNC_SERVER)
 RSYNC_FOLDERS=$(_pid1env RSYNC_FOLDERS)
 RSYNC_STIME=$(_pid1env RSYNC_STIME)
+RSYNC_FLAGS=$(_pid1env RSYNC_FLAGS)
 
 _setup() {
 	ebegin "Setting up environment for rsync"
@@ -23,7 +24,7 @@ _sync() {
 	# Running in client mode
 	while true; do
 		for dir in ${RSYNC_FOLDERS//,/ }; do
-			rsync -aEzim --delete --timeout 10 rsync://rsync-manager/rsync/data/$dir /rsync/data/
+			rsync $RSYNC_FLAGS rsync://rsync-manager/rsync/data/$dir /rsync/data/
 		done
 		sleep ${RSYNC_STIME}
 	done
