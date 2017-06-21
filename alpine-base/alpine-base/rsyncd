@@ -24,11 +24,9 @@ _sync() {
 		# Running in client mode
 		while true; do
 			for dir in ${RSYNC_FOLDERS//,/}; do
-				if [ -n "${RSYNC_OUTPUT}" ]; then
-					rsync -aEim rsync://rsync-manager/rsync/data/$dir /rsync/data/
-				fi
-				sleep ${RSYNC_STIME}
+				rsync -aEim rsync://rsync-manager/rsync/data/$dir /rsync/data/
 			done
+			sleep ${RSYNC_STIME}
 		done
 	fi
 }
