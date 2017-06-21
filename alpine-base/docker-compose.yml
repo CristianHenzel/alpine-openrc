@@ -17,6 +17,7 @@ services:
       RSYNC_SERVER: 'rsync-manager'
       RSYNC_FOLDERS: 'example1,example2'
       RSYNC_STIME: 3
+      RSYNC_FLAGS: '-aEzim --delete --timeout 10'
     deploy:
       mode: global
       placement:
