@@ -4,7 +4,7 @@ RSYNCC_PID=/var/run/rsyncc.pid
 RSYNCD_PID=/var/run/rsyncd.pid
 
 _pid1env() {
-	xargs -n 1 -0 < /proc/1/environ | grep "^$2=" | cut -d= -f2
+	xargs -n 1 -0 < /proc/1/environ | grep "^$1=" | cut -d= -f2
 }
 
 RSYNC_SERVER=$(_pid1env RSYNC_SERVER)
@@ -20,15 +20,13 @@ _setup() {
 }
 
 _sync() {
-	if [ "$RSYNC_SERVER" != "true" ]; then
-		# Running in client mode
-		while true; do
-			for dir in ${RSYNC_FOLDERS//,/}; do
-				rsync -aEim rsync://rsync-manager/rsync/data/$dir /rsync/data/
-			done
-			sleep ${RSYNC_STIME}
+	# Running in client mode
+	while true; do
+		for dir in ${RSYNC_FOLDERS//,/}; do
+			rsync -aEim rsync://rsync-manager/rsync/data/$dir /rsync/data/
 		done
-	fi
+		sleep ${RSYNC_STIME}
+	done
 }
 
 depend() {
@@ -38,9 +36,11 @@ depend() {
 
 start_pre() {
 	_setup
-	ebegin "Starting rsync-client"
-	_sync &
-	echo $! > $RSYNCC_PID
+	if [ "$RSYNC_SERVER" != "true" ]; then
+		ebegin "Starting rsync-client"
+		_sync &
+		echo $! > $RSYNCC_PID
+	fi
 	return $?
 }
 
