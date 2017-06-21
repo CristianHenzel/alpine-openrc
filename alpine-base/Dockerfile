@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-RUN /sbin/apk add --no-cache curl dcron inotify-tools openrc rsync tar
+RUN /sbin/apk add --no-cache curl dcron openrc rsync
 
 COPY ./alpine-base /var/alpine-base
 
@@ -13,7 +13,6 @@ RUN /bin/sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf &&\
     /bin/echo 'rc_provide="loopback net"' >> /etc/rc.conf &&\
     /bin/ln -sf /var/alpine-base/rsyncd /etc/init.d/rsyncd &&\
     /bin/chmod +x /var/alpine-base/rsyncd &&\
-    /bin/chmod +x /var/alpine-base/rsync-manager.sh &&\
     /bin/ln -sf /var/alpine-base/rsyncd.conf /etc/rsyncd.conf &&\
     /sbin/rc-update add dcron &&\
     /sbin/rc-update add rsyncd
