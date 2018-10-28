@@ -11,4 +11,8 @@ RUN	apt-get update && \
 		supervisor && \
 	rm -rf /var/lib/apt/lists/*
 
-CMD	["/sbin/openrc"]
+RUN	mkdir /run/sshd
+
+ADD	./debian-testing-dev/supervisor/* /etc/supervisor/conf.d/
+
+CMD	["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
