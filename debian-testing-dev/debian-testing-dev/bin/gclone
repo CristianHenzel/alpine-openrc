@@ -5,4 +5,4 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-git clone "dropbox://:${DROPBOX_TOKEN}@/${1}.git"
+git clone "dropbox://:${DROPBOX_TOKEN}@/${1}.git" -b master
