@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /work
+
+for repo in $CLONE_REPOS; do
+	gclone $repo
+done
