@@ -18,9 +18,10 @@ RUN	apt-get update && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN	pip install git-remote-dropbox && \
-	mkdir -p /root/.config/git /run/sshd && \
+	mkdir -p /root/.config/git /run/sshd /out && \
 	useradd -m -p '$6$ays6WfRV0q$f2V8on1bcGRa78/0GGl6ObLjQO3AXt.fvSpa1PB9QnmVPaKiPgi4MPPviFaH/tgUmWtA3dASBeq/0Uz40QlfQ.' -s "/bin/bash" -d "/work" admin && \
 	echo "admin ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/admin && \
+	chmod 777 /out && \
 	echo "{\n\t\"default\": \"aaa\"\n}" > /root/.config/git/git-remote-dropbox.json
 
 ADD	./debian-testing-dev/supervisor/* /etc/supervisor/conf.d/
