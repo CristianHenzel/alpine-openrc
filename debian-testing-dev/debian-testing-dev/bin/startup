@@ -5,3 +5,5 @@ cd /work
 for repo in $CLONE_REPOS; do
 	gclone $repo
 done
+
+chown -R admin /work
