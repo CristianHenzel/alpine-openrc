@@ -1,8 +1,14 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
+REPOSITORY="$1"
+
+if [ -z "$REPOSITORY" ]; then
 	echo "USAGE: $0 REPO"
 	exit 1
 fi
 
-git clone "dropbox://:${DROPBOX_TOKEN}@/${1}.git" -b master
+if [[ "${REPOSITORY:0:7}" = "http://" ]]; then
+	git clone "$REPOSITORY"
+else
+	git clone "dropbox://:${DROPBOX_TOKEN}@/${REPOSITORY}.git" -b master
+fi
