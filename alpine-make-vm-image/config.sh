@@ -10,11 +10,14 @@ if [ "$1" = "start" ]; then
 	wget https://raw.githubusercontent.com/alpinelinux/alpine-make-vm-image/v0.4.0/alpine-make-vm-image && \
 		echo '5fb3270e0d665e51b908e1755b40e9c9156917c0  alpine-make-vm-image' | sha1sum -c || \
 		exit 1
+	chmod +x alpine-make-vm-image
 	./alpine-make-vm-image \
 	--image-format qcow2 \
 	--image-size 2G \
 	alpine-virthardened-$(date +%Y-%m-%d).qcow2 \
 	/usr/local/bin/configure.sh config
+	
+	sleep 60000
 else
 	step 'Set up timezone'
 	setup-timezone -z Europe/Bucharest
