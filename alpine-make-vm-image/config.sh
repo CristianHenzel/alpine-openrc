@@ -15,7 +15,7 @@ if [ "$1" = "start" ]; then
 	--image-format qcow2 \
 	--image-size 2G \
 	alpine-virthardened-$(date +%Y-%m-%d).qcow2 \
-	/usr/local/bin/configure.sh config
+	/configure.sh config
 	
 	sleep 60000
 else
