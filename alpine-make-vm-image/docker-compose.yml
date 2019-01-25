@@ -5,7 +5,9 @@ volumes:
 
 services:
   make-vm:
-    build: https://github.com/cristianhenzel/dockerfiles/alpine-make-vm-image
+    build:
+      context: https://github.com/cristianhenzel/dockerfiles.git
+      dockerfile: alpine-make-vm-image/Dockerfile
     volumes:
       - download:/download
   nginx:
