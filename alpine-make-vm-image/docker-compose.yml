@@ -1,0 +1,8 @@
+services:
+  make-vm:
+    build: https://github.com/cristianhenzel/dockerfiles/alpine-make-vm-image
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    
