@@ -1,8 +1,16 @@
+version: '3'
+
+volumes:
+  download:
+
 services:
   make-vm:
     build: https://github.com/cristianhenzel/dockerfiles/alpine-make-vm-image
+    volumes:
+      - download:/download
   nginx:
     image: nginx:latest
     ports:
-      - 80:80
-    
+      - "80:80"
+    volumes:
+      - download:/var/www
