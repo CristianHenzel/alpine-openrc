@@ -8,7 +8,7 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-      - "wget https://raw.githubusercontent.com/CristianHenzel/dockerfiles/master/alpine-make-vm-image/config.sh -O /usr/local/bin/config.sh && /usr/local/bin/config.sh start"
+      - "wget https://raw.githubusercontent.com/CristianHenzel/dockerfiles/master/alpine-make-vm-image/config.sh -O /config.sh && chmod +x /config.sh && /config.sh start"
     image: hecristi/alpine-base:latest
     volumes:
       - download:/download
