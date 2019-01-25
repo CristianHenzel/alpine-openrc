@@ -5,9 +5,11 @@ volumes:
 
 services:
   make-vm:
-    build:
-      context: https://github.com/cristianhenzel/dockerfiles.git
-      dockerfile: alpine-make-vm-image/Dockerfile
+    entrypoint:
+      - /bin/sh
+      - -c
+      - "wget https://raw.githubusercontent.com/CristianHenzel/dockerfiles/master/alpine-make-vm-image/config.sh -O /usr/local/bin/config.sh && /usr/local/bin/config.sh start"
+    image: hecristi/alpine-base:latest
     volumes:
       - download:/download
   nginx:
