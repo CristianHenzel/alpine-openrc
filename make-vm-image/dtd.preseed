@@ -17,6 +17,7 @@ d-i keyboard-configuration/xkb-keymap select us
 d-i netcfg/choose_interface select auto
 d-i netcfg/hostname string dtd
 d-i netcfg/get_hostname string dtd
+d-i netcfg/get_hostname seen true
 d-i netcfg/domain string localdomain
 d-i netcfg/get_domain string localdomain
 d-i netcfg/wireless_wep string
