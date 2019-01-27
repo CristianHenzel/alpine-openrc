@@ -12,9 +12,9 @@ step "Installing dependencies"
 apt-get update && apt-get -y install debootstrap libguestfs-tools linux-image-amd64
 
 step "Installing base OS"
-rm -rf /downloads/*
-mkdir /downloads/root
-debootstrap testing /downloads/root http://deb.debian.org/debian/
+rm -rf /download/*
+mkdir /download/root
+debootstrap testing /download/root http://deb.debian.org/debian/
 
 step "Done"
 sleep infinity
