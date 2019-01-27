@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 _step_counter=0
 step() {
@@ -7,5 +7,5 @@ step() {
 }
 
 step "Installing dependencies"
-apt update && apt install libguestfs-tools linux-image-generic
+apt update && apt -y install libguestfs-tools linux-image-generic
 
