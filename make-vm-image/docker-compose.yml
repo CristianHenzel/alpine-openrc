@@ -8,7 +8,7 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-      - "wget https://git.io/fh6B5 -O /config.sh && chmod +x /config.sh && /config.sh"
+      - "apt update && apt install wget && wget https://git.io/fh6B5 -O /config.sh && chmod +x /config.sh && /config.sh"
     image: debian:testing
     volumes:
       - download:/download
