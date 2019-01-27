@@ -1,5 +1,5 @@
 # Debian preseed
-# https://git.io/fh6wL
+# Commandline: auto=true url=https://git.io/fh6wL
 
 ### Localization
 d-i debian-installer/locale string en_US
@@ -19,6 +19,11 @@ d-i netcfg/get_hostname string dtd
 d-i netcfg/get_domain string localdomain
 d-i netcfg/wireless_wep string
 d-i hw-detect/load_firmware boolean true
+
+# Skip scanning CDs/DVDs
+d-i apt-setup/cdrom/set-first boolean false
+d-i apt-setup/cdrom/set-next boolean false   
+d-i apt-setup/cdrom/set-failed boolean false
 
 ### Mirror settings
 d-i mirror/country string manual
