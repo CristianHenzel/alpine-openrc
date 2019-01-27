@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 _step_counter=0
 step() {
 	_step_counter=$(( _step_counter + 1 ))
@@ -7,5 +9,5 @@ step() {
 }
 
 step "Installing dependencies"
-apt update && apt -y install libguestfs-tools linux-image-generic
+apt update && apt -y install libguestfs-tools linux-image-amd64
 
