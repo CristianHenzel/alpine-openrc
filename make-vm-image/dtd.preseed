@@ -15,7 +15,9 @@ d-i keyboard-configuration/xkb-keymap select us
 
 ### Network configuration
 d-i netcfg/choose_interface select auto
+d-i netcfg/hostname string dtd
 d-i netcfg/get_hostname string dtd
+d-i netcfg/domain string localdomain
 d-i netcfg/get_domain string localdomain
 d-i netcfg/wireless_wep string
 d-i hw-detect/load_firmware boolean true
@@ -54,6 +56,7 @@ d-i partman-md/confirm boolean true
 d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm_nooverwrite boolean true
+d-i partman-efi/non_efi_system true
 
 ### Account setup
 d-i passwd/root-login boolean false
