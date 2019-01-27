@@ -13,8 +13,8 @@ services:
     volumes:
       - download:/download
   nginx:
-    image: nginx:latest
+    image: jrelva/nginx-autoindex:latest
     ports:
       - "80:80"
     volumes:
-      - download:/var/www
+      - download:/usr/share/nginx/html
