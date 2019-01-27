@@ -25,7 +25,7 @@ d-i mirror/country string manual
 d-i mirror/http/hostname string http.debian.net
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
-d-i mirror/suite string jessie
+d-i mirror/suite string testing
 
 ### Clock and time zone setup
 d-i clock-setup/utc boolean true
