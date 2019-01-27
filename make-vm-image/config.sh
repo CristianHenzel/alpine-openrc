@@ -11,3 +11,5 @@ step() {
 step "Installing dependencies"
 apt-get update && apt-get -y install libguestfs-tools linux-image-amd64
 
+step "Done"
+sleep infinity
