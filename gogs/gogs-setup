@@ -1,0 +1,28 @@
+#!/bin/sh
+
+ln -sfn /data/gogs/git  /data/git
+
+# Backward Compatibility with Gogs Container v0.6.15
+ln -sfn /data/git /home/git
+
+if ! test -d ~git/.ssh; then
+    mkdir -p ~git/.ssh
+    chmod 700 ~git/.ssh
+fi
+
+if ! test -f ~git/.ssh/environment; then
+    echo "GOGS_CUSTOM=${GOGS_CUSTOM}" > ~git/.ssh/environment
+    chmod 600 ~git/.ssh/environment
+fi
+
+cd /app/gogs
+
+# Link volumed data with app data
+ln -sfn /data/gogs/log  ./log
+ln -sfn /data/gogs/data ./data
+
+# Only chown for the first time, '/data/gogs/conf/app.ini' must exist inside Docker after installation
+if ! test -d /data/gogs/conf/app.ini; then
+	chown -R git:git /data /app/gogs ~git/
+fi
+chmod 0755 /data /data/gogs ~git/
