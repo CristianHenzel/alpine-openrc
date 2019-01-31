@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ln -sfn /data/gogs/git  /data/git
+rm -rf /data/git && ln -sfn /data/gogs/git /data/git
 
 # Backward Compatibility with Gogs Container v0.6.15
 ln -sfn /data/git /home/git
