@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ln -sfn /data/gogs/ssh  /data/ssh
+rm -rf /data/ssh && ln -sfn /data/gogs/ssh  /data/ssh
 
 # Check if host keys are present, else create them
 if ! test -f /data/ssh/ssh_host_rsa_key; then
