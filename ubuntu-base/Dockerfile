@@ -12,4 +12,4 @@ RUN	/usr/bin/apt-get update && \
 		supervisor \
 		wget
 
-CMD	["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD	["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
