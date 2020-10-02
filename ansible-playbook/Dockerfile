@@ -15,6 +15,7 @@ RUN     apk add --no-cache \
                 py3-pip \
                 py3-setuptools \
                 py3-yaml \
+		sshpass \
                 tar && \
         rm -rf /var/cache/apk/*
 
