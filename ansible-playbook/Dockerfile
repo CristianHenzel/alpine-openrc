@@ -34,7 +34,7 @@ RUN	chmod +x /bin/entrypoint
 
 ENV ANSIBLE_GATHERING smart
 ENV ANSIBLE_HOST_KEY_CHECKING false
-ENV ANSIBLE_INVENTORY=/ansible/playbooks/hosts
+ENV ANSIBLE_INVENTORY=/ansible/playbooks/hosts.yaml
 ENV ANSIBLE_RETRY_FILES_ENABLED false
 ENV ANSIBLE_ROLES_PATH /ansible/playbooks/roles
 ENV ANSIBLE_SSH_PIPELINING True
