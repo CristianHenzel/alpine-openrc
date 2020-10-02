@@ -2,6 +2,7 @@ FROM alpine:latest
 ARG VERSION=2.9.11
 
 RUN     apk add --no-cache \
+		bash \
                 curl \
                 git \
                 openssh-client \
