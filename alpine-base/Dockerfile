@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:latest
 
 RUN /sbin/apk add --no-cache bash curl dcron openrc
 
