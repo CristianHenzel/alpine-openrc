@@ -1,6 +1,6 @@
 FROM alpine:3.8
 
-RUN /sbin/apk add --no-cache curl dcron openrc
+RUN /sbin/apk add --no-cache bash curl dcron openrc
 
 RUN /bin/sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf &&\
     /bin/sed -i 's/^#\(rc_logger="YES"\)$/\1/' /etc/rc.conf &&\
