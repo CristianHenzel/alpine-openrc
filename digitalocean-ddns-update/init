@@ -4,21 +4,21 @@ set -euo pipefail
 
 [ ! -f /tmp/ipstore ] && echo "0.0.0.0" > /tmp/ipstore
 
-OLD_IP=$(cat /tmp/ipstore)
-CURRENT_IP=$(curl -s "https://api.ipify.org")
-
 while true; do
+	OLD_IP=$(cat /tmp/ipstore)
+	CURRENT_IP=$(curl -s "https://api.ipify.org")
+
 	if [ "${CURRENT_IP}" != "${OLD_IP}" ]; then
 		echo "IP change detected from ${OLD_IP} to ${CURRENT_IP}"
 
 		DO_RECORD_ID=$(curl -s -X GET -H "Content-Type: application/json" \
 			-H "Authorization: Bearer ${DO_TOKEN}" \
 			"https://api.digitalocean.com/v2/domains/${DO_DOMAIN}/records" | \
-			jq '.domain_records[] | select(.type == "A" and .name == "${DO_SUBDOMAIN}") | .id')
+			jq ".domain_records[] | select(.type == \"A\" and .name == \"${DO_SUBDOMAIN}\") | .id")
 
 		curl -s -X PUT -H "Content-Type: application/json" \
 			-H "Authorization: Bearer ${DO_TOKEN}" \
-			-d '{"data":"'"$CURRENT_IP"'"}' \
+			-d "{\"data\":\"$CURRENT_IP\"}" \
 			"https://api.digitalocean.com/v2/domains/${DO_DOMAIN}/records/${DO_RECORD_ID}"
 
 		echo -n "${CURRENT_IP}" > /tmp/ipstore
