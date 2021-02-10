@@ -6,5 +6,6 @@ RUN /sbin/apk add --no-cache \
 	jq
 
 ADD ./init /init
+RUN chmod +x /init
 
 ENTRYPOINT ["/init"]
