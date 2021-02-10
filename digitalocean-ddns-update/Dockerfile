@@ -3,7 +3,8 @@ FROM alpine:latest
 RUN /sbin/apk add --no-cache \
 	bash \
 	curl \
-	jq
+	jq \
+	tzdata
 
 ADD ./init /init
 RUN chmod +x /init
