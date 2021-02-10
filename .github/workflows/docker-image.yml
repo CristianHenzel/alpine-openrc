@@ -25,12 +25,21 @@ jobs:
         with:
           username: ${{ secrets.DH_USER }}
           password: ${{ secrets.DH_PAT }}
-      - name: Build and push image
+      - name: Build and push ansible-playbook image
         uses: docker/build-push-action@v2
         with:
           context: ./ansible-playbook
           file: ./ansible-playbook/Dockerfile
           tags: ${{ secrets.DH_USER }}/ansible-playbook:latest
+          push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Build and push digitalocean-ddns-update image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./digitalocean-ddns-update
+          file: ./digitalocean-ddns-update/Dockerfile
+          tags: ${{ secrets.DH_USER }}/digitalocean-ddns-update:latest
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
