@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
-[ ! -f /tmp/ipstore ] && touch /tmp/ipstore
+[ ! -f /tmp/ipstore ] && echo "0.0.0.0" > /tmp/ipstore
 
 OLD_IP=$(cat /tmp/ipstore)
 CURRENT_IP=$(curl -s "https://api.ipify.org")
