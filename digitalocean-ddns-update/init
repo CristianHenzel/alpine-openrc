@@ -17,10 +17,15 @@ while true; do
 				"https://api.digitalocean.com/v2/domains/${DO_DOMAIN}/records" | \
 				jq ".domain_records[] | select(.type == \"A\" and .name == \"${DO_SUBDOMAIN}\") | .id")
 
-			curl -s -X PUT -H "Content-Type: application/json" \
+			RESULT=$(curl -s -X PUT -H "Content-Type: application/json" \
 				-H "Authorization: Bearer ${DO_TOKEN}" \
 				-d "{\"data\":\"$CURRENT_IP\"}" \
-				"https://api.digitalocean.com/v2/domains/${DO_DOMAIN}/records/${DO_RECORD_ID}"
+				"https://api.digitalocean.com/v2/domains/${DO_DOMAIN}/records/${DO_RECORD_ID}")
+
+			DNS_REC=$(echo "${RESULT}" | jq -r .domain_record.data)
+			if [ "${DNS_REC}" != "${CURRENT_IP}" ]; then
+				echo "Error updating DNS. Current DNS: ${DNS_REC}"
+			fi
 
 			echo -n "${CURRENT_IP}" > /tmp/ipstore
 		fi
